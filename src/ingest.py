@@ -45,7 +45,7 @@ def get_embedders(model_name="sentence-transformers/all-MiniLM-L6-v2"):
     return SentenceTransformer(model_name)
     
  
-def chunk_text(documents, chunk_size=500, chunk_overlap=50):    
+def chunk_text(documents, chunk_size=1500, chunk_overlap=250):    
     """Chunk long documents into smaller segments."""
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size,
                                           chunk_overlap=chunk_overlap,
