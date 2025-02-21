@@ -5,8 +5,8 @@ from sentence_transformers import SentenceTransformer
 from langchain.document_loaders import PyPDFLoader, TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import pickle
-from chromadb import Client  # Import ChromaDB client
-from chromadb.config import Settings  # Import ChromaDB settings
+from chromadb import PersistentClient  # Import ChromaDB client
+import uuid
 
 
 
@@ -55,30 +55,19 @@ def chunk_text(documents, chunk_size=500, chunk_overlap=50):
     return text_splitter.split_documents(documents)
 
 
-def create_chroma_index(embeddings):
-    """Create a ChromaDB index from embeddings."""
-    client = Client(Settings(chroma_db_impl="duckdb+parquet", persist_directory="../models/embeddings/chroma_db"))  # Initialize ChromaDB client
+def create_chroma_index(db_path, texts):
+    """Create a ChromaDB index using the default embedding function"""
+    client = PersistentClient(path=db_path)
+    unique_ids = set()
+    unique_chunks = []
+    ids = [str(uuid.uuid5(uuid.NAMESPACE_DNS, t)) for t in texts]
+
+    for t, id in zip(texts, ids):     
+        if id not in unique_ids:       
+            unique_ids.add(id)
+            unique_chunks.append(t)     
+    
     collection = client.create_collection("documents")  # Create a collection
-    collection.add(embeddings)  # Add embeddings to the collection
+    collection.add(ids, documents=unique_chunks)  # Add embeddings to the collection
     return collection
 
-def main():
-    """Ingest documents, generate embeddings, and store in ChromaDB."""
-    print("Loading documents...")
-    raw_texts = load_documents()
-
-    print(f"Loaded {len(raw_texts)} documents. Chunking...")
-    texts = chunk_text(raw_texts)
-    embedder = get_embedders()
-    print("Generating embeddings...")
-    embeddings = embedder.encode(texts, convert_to_numpy=True)
-
-    print("Creating ChromaDB index...")
-    collection = create_chroma_index(embeddings)  # Use ChromaDB instead of FAISS
-    
-    save_text(texts)
-    
-    print("Ingestion complete!")
-
-if __name__ == "__main__":
-    main()
