@@ -1,7 +1,6 @@
 import os
 import json
 import numpy as np
-from sentence_transformers import SentenceTransformer
 from langchain.document_loaders import PyPDFLoader, TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import pickle

@@ -13,4 +13,4 @@ def retrieve(chroma_db_path, query, k=3):
         n_results=k
     )
 
-    return results["documents"] if "documents" in results else []
+    return results["documents"][0] if "documents" in results else []
