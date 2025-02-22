@@ -1,7 +1,8 @@
-openai==1.2.3
-chromadb==0.4.5
-sentence-transformers==2.2.2
-streamlit==1.29.0
-python-dotenv==1.0.0
-pytest==7.4.3
-transformers
+openai
+langchain_chroma
+streamlit
+python-dotenv
+langchain_openai
+langchain
+langchain_community
+pypdf
