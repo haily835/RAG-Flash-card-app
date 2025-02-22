@@ -1,16 +1,8 @@
-import chromadb
-
-def retrieve(chroma_db_path, query, k=3):
-    """Retrieve top-k most relevant text chunks for a query."""
-
-
-    chroma_client = chromadb.PersistentClient(path=chroma_db_path)
-    collection = chroma_client.get_or_create_collection(name="documents")
+def retrieve(vectorstore, query):
+    """Retrieve  most relevant text chunks for a query."""
     
+    retriever = vectorstore.as_retriever(search_type='similarity')
     
-    results = collection.query(
-        query_texts=[query],
-        n_results=k
-    )
+    results = retriever.invoke(query)
 
-    return results["documents"][0] if "documents" in results else []
+    return results
