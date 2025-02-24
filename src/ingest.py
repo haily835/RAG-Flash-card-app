@@ -15,27 +15,16 @@ def save_text(texts, vector_db_path="../models/embeddings/chroma_index"):
     with open(f"{vector_db_path}_texts.pkl", "wb") as f:
         pickle.dump(texts, f)
 
-def load_documents(data_dir="./data"):
+def load_documents(file_path="./data/Paper.pdf"):
     """Load and preprocess documents from the data directory."""
     docs = []
+
+
+    loader = PyPDFLoader(file_path)
+
+    pages = loader.load()
+    docs.extend([p for p in pages])
     
-    for file in os.listdir(data_dir):
-        file_path = os.path.join(data_dir, file)
-        
-        if file.endswith(".pdf"):
-            loader = PyPDFLoader(file_path)
-            pages = loader.load()
-            docs.extend([p for p in pages])
-        
-        elif file.endswith(".txt") or file.endswith(".md"):
-            loader = TextLoader(file_path)
-            pages = loader.load()
-            docs.extend([p for p in pages])
-        
-        elif file.endswith(".json"):
-            with open(file_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                docs.extend(data.values())  # Assuming JSON is a key-value dictionary
     
     return docs
 
@@ -43,9 +32,9 @@ def load_documents(data_dir="./data"):
 
 
 
-def get_embedder(model_name="text-embedding-3-small"):
+def get_embedder(api_key, model_name="text-embedding-3-small"):
     """Get the embedding function from sentence_transformers"""
-    return OpenAIEmbeddings(model=model_name)
+    return OpenAIEmbeddings(model=model_name, api_key=api_key)
     
  
 def chunk_text(documents, chunk_size=1500, chunk_overlap=250):    
@@ -68,9 +57,13 @@ def load_vectorstore(file_name, embedding_function, vectorstore_path="db"):
     
     :return: A Chroma vector store object
     """
-    return Chroma(persist_directory=vectorstore_path, 
+    try:
+        vec = Chroma(persist_directory=vectorstore_path, 
                   embedding_function=embedding_function, 
                   collection_name=clean_filename(file_name))
+        return vec
+    except:
+        return None
 
 
 def clean_filename(filename):
@@ -88,7 +81,7 @@ def clean_filename(filename):
     new_filename = re.sub(r'\s\(\d+\)', '', filename)
     return new_filename
 
-def create_chroma_index(db_path, file_name, embedding_function , texts):
+def create_vectorstore(file_name, embedding_function , texts, vectorstore_path='db'):
     """Create a ChromaDB index using the default embedding function"""
   
     
@@ -107,7 +100,7 @@ def create_chroma_index(db_path, file_name, embedding_function , texts):
         ids=list(unique_ids), 
         documents=unique_chunks, 
         embedding=embedding_function,
-        persist_directory=db_path,  # Where to save data locally, remove if not necessary
+        persist_directory=vectorstore_path,  # Where to save data locally, remove if not necessary
     )
     return vector_store
 
