@@ -1,6 +1,39 @@
-# RAG Flash Card App
+# RAG QA and Flash Card App
 
-This project is a Research Article Generator (RAG) Flash Card App that extracts key points from research articles and generates flashcards with sources and reasoning.
+RAG Flash Card App i  Retrieval-Augmented Generation (RAG) project that extracts key points from PDF files and generates flashcards from it using OpenAI api, langchain, chromadb and streamlit.
+
+## What is Retrieval-Augmented Generation (RAG)?
+
+Retrieval-Augmented Generation (RAG) is a hybrid approach that combines information retrieval with generative language models to produce more accurate, contextually enriched responses. Instead of relying solely on the model’s internal knowledge, RAG first retrieves relevant documents or passages from an external knowledge base (using tools like FAISS or ChromaDB) and then feeds that context into a generative model (like GPT) to produce a well-informed answer.
+
+## Who will need this? 
+- 🎓 Students
+Use course slides and textbooks as a knowledge base for LLM models, enabling them to generate accurate answers without fabricating information.
+
+- 🔬 Researchers
+Summarize and extract key points from recently published research papers, ensuring the essence of cutting-edge findings is captured.
+
+
+## Tech Stack
+🐍 Python
+The primary programming language for developing the project.
+
+⚡ Streamlit
+A framework for building the web application, providing an intuitive UI for interaction.
+
+📚 Chroma
+A database used for storing embeddings, enabling efficient retrieval of context.
+
+🔗 LangChain
+Utilized for reading PDFs, extracting text, and converting it into embeddings via the OpenAI API.
+
+🐳 Docker
+Containerizes the development environment to ensure consistency and reproducibility.
+
+💻 VS Code Dev Containers
+An extension that facilitates development within a containerized environment.
+
+
 
 ## Project Structure
 ```bash
@@ -56,11 +89,16 @@ This project is a Research Article Generator (RAG) Flash Card App that extracts 
 
 1. **Run the application:**
     ```sh
-    python src/app.py
+    streamlit run src/app.py
     ```
+
+    The app will be running at localhost:8501
 
 2. **Generate flashcards:**
     - Use the [generate_flashcard](http://_vscodecontentref_/7) function in [generator.py](http://_vscodecontentref_/8) to create flashcards from a given context.
+
+3. **Question answering:**
+    - Use the [generate_flashcard](http://_vscodecontentref_/7) function in [generator.py](http://_vscodecontentref_/8) to give answer from a relevant context.
 
 ## Project Components
 - **Data:** Contains PDF files used for generating flashcards.
@@ -74,3 +112,8 @@ This project is a Research Article Generator (RAG) Flash Card App that extracts 
   - **prompts.py:** Contains prompt templates.
   - **retriever.py:** Contains functions for retrieving data.
 - **Tests:** Contains unit tests for the application.
+
+
+⭐️ If you find this repository helpful, please consider giving it a star!
+
+Keywords: RAG, Retrieval-Augmented Generation, NLP, AI, Machine Learning, Information Retrieval, Natural Language Processing, LLM, Embeddings
